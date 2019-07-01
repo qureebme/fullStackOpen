@@ -3,35 +3,46 @@ import ReactDOM from 'react-dom';
 //import './index.css';
 //import App from './App';
 //import * as serviceWorker from './serviceWorker';
-/*
-const App = () => {
-    const course = 'Half Stack application development'
-    const part1 = 'Fundamentals of React'
-    const exercises1 = 10
-    const part2 = 'Using props to pass data'
-    const exercises2 = 7
-    const part3 = 'State of a component'
-    const exercises3 = 14
-}
-*/
+
 const Header = (props) => {
     return ( <
         h1 > { props.course } < /h1>
     )
 }
 
-const Content = (props) =>
-    ( <
+const Part = (props) => {
+    return ( <
+        >
+        <
+        p > { props.part } { props.ex } <
+        /p>   < / >
+    )
+}
+
+const Content = () => {
+
+    const part = {
+        part1: 'Fundamentals of React',
+        part2: 'Using props to pass data',
+        part3: 'State of a component'
+    }
+    const ex = { exercises1: 10, exercises2: 7, exercises3: 14 }
+
+    return ( <
         div >
         <
-        p > { props.part1 } { props.exercises1 } <
-        /p> <
-        p > { props.part2 } { props.exercises2 } <
-        /p> <
-        p > { props.part3 } { props.exercises3 } <
-        /p>  < /
+        Part part = { part.part1 }
+        ex = { ex.exercises1 }
+        / > <
+        Part part = { part.part2 }
+        ex = { ex.exercises2 }
+        / > <
+        Part part = { part.part3 }
+        ex = { ex.exercises3 }
+        / > < /
         div >
     )
+}
 
 const Total = (props) => {
     return ( <
@@ -44,37 +55,26 @@ const App = () => {
         // const-definitions
         const course = 'Half Stack application development'
 
-        const part1 = 'Fundamentals of React'
         const exercises1 = 10
-        const part2 = 'Using props to pass data'
         const exercises2 = 7
-        const part3 = 'State of a component'
         const exercises3 = 14
 
         return ( <
-            div >
-
+            >
             <
             Header course = { course }
             /> 
 
             <
-            Content part1 = { part1 }
-            part2 = { part2 }
-            part3 = { part3 }
-            exercises1 = { exercises1 }
-            exercises2 = { exercises2 }
-            exercises3 = { exercises3 }
-            / > <
+            Content /
+            >
+            <
 
             Total exercises1 = { exercises1 }
             exercises2 = { exercises2 }
             exercises3 = { exercises3 }
-            / >
+            / > < / >
 
-            <
-            /
-            div >
         )
     }
     /*
