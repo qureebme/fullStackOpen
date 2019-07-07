@@ -49,13 +49,20 @@ const MetaStat = ({all, average, positive }) => {
   else return(<p></p>)
 
 }
-
+const Statistic = ({text, value}) =>(
+  <p>{text} {value}</p>
+)
 
 const Statistics = (props) => (
-  <div>
-    <Feedback good={props.good} neutral={props.neutral} bad={props.bad}/>
-    <MetaStat all={props.all} average={props.avg} positive={props.goody}/>
-  </div>
+<>
+    <Statistic text={"good"} value={props.good}/>
+    <Statistic text={"neutral"} value={props.neutral}/>
+    <Statistic text={"bad"} value={props.bad}/>
+    <Statistic text={"all"} value={props.all}/>
+    <Statistic text={"average"} value={props.avg}/>
+    <Statistic text={"positive"} value={props.goody}/>
+</>
+
 )
 const App = () => {
 
