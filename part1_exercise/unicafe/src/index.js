@@ -32,9 +32,13 @@ const MetaStat = ({all, average, positive }) =>(
     <p>{"positive"} {positive}{"%"}</p>
   </div>
 )
-
+const Statistics = (props) => (
+  <div>
+    <Feedback good={props.good} neutral={props.neutral} bad={props.bad}/>
+    <MetaStat all={props.all} average={props.avg} positive={props.goody}/>
+  </div>
+)
 const App = () => {
-
 
   const GoodClickHandler = () => {
     setGood(good + 1);
@@ -78,14 +82,11 @@ const App = () => {
         <Button text="Neutral" onclick={NeutralClickHandler}/>
         <Button text="Bad" onclick={BadClickHandler}/>
       </div>
-      <div>
-      <Feedback good={good} neutral={neutral} bad={bad}/>
-      <MetaStat all={metastats.all} average={metastats.avg} positive={metastats.goody}/>
-      </div>
+      <Statistics good={good} neutral={neutral} bad={bad}
+        all={metastats.all} avg={metastats.avg} goody={metastats.goody}/>
     </div>
   )
 }
-
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
