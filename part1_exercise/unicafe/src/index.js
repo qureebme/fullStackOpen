@@ -13,6 +13,13 @@ let Header2 = () => (
 let Button = ({text, onclick}) =>(
   <button onClick={onclick}>{text}</button>
 )
+let Buttons = (props) => (
+  <>
+    <Button text="Good" onclick={props.GoodClickHandler}/>
+    <Button text="Neutral" onclick={props.NeutralClickHandler}/>
+    <Button text="Bad" onclick={props.BadClickHandler}/>
+  </>
+)
 
 let Feedback = ({good, neutral, bad}) =>{
   if(good===0 && neutral===0 && bad===0){
@@ -104,9 +111,9 @@ const App = () => {
     <div>
       <Header1 />
       <div className="buttons">
-        <Button text="Good" onclick={GoodClickHandler}/>
-        <Button text="Neutral" onclick={NeutralClickHandler}/>
-        <Button text="Bad" onclick={BadClickHandler}/>
+        <Buttons GoodClickHandler={GoodClickHandler} BadClickHandler={BadClickHandler}
+        NeutralClickHandler={NeutralClickHandler}/>
+
       </div>
       <Statistics good={good} neutral={neutral} bad={bad}
         all={metastats.all} avg={metastats.avg} goody={metastats.goody}/>
