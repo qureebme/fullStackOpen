@@ -25,15 +25,50 @@ let Feedback = ({good, neutral, bad}) =>{
   )
 }
 
+const MetaStat = ({all, average, positive }) =>(
+  <div>
+    <p>{"all"} {all}</p>
+    <p>{"average"} {average}</p>
+    <p>{"positive"} {positive}{"%"}</p>
+  </div>
+)
+
 const App = () => {
-  //const onClickHandler = () => console.log('clicked');
-  const GoodClickHandler = () => setGood(good + 1);
-  const NeutralClickHandler = () => setNeutral(neutral + 1);
-  const BadClickHandler = () => setBad(bad + 1);
+
+
+  const GoodClickHandler = () => {
+    setGood(good + 1);
+    //console.log("good: ", good)
+    let good2 = good+1;
+    const newMeta = {
+      ...metastats,
+      all: metastats.all + 1, avg: (good2-bad)/(metastats.all+1), goody: 100*good2/(metastats.all+1)
+    }
+    setMeta(newMeta);
+  }
+
+  const NeutralClickHandler = () => {
+    setNeutral(neutral + 1);
+    const newMeta = {
+      ...metastats,
+      all: metastats.all + 1, avg: (good-bad)/(metastats.all+1), goody: 100*good/(metastats.all+1)
+    }
+    setMeta(newMeta);
+  }
+  const BadClickHandler = () => {
+    setBad(bad + 1);
+    let bad2 = bad+1;
+    const newMeta = {
+      ...metastats,
+      all: metastats.all + 1, avg: (good-bad2)/(metastats.all+1), goody: 100*good/(metastats.all+1)
+    }
+    setMeta(newMeta);
+  }
   // save clicks of each button to own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [metastats, setMeta] = useState({all:0, avg:0, goody:0});
 
   return (
     <div>
@@ -45,6 +80,7 @@ const App = () => {
       </div>
       <div>
       <Feedback good={good} neutral={neutral} bad={bad}/>
+      <MetaStat all={metastats.all} average={metastats.avg} positive={metastats.goody}/>
       </div>
     </div>
   )
