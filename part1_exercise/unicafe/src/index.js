@@ -15,23 +15,42 @@ let Button = ({text, onclick}) =>(
 )
 
 let Feedback = ({good, neutral, bad}) =>{
-  return (
-    <div>
-      <Header2 />
-      <p>{"Good"} {good} </p>
-      <p>{"Neutral"} {neutral} </p>
-      <p>{"Bad"} {bad} </p>
-    </div>
-  )
+  if(good===0 && neutral===0 && bad===0){
+    return(
+      <div>
+        <Header2 />
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+  else{
+    return (
+      <div>
+        <Header2 />
+        <p>{"Good"} {good} </p>
+        <p>{"Neutral"} {neutral} </p>
+        <p>{"Bad"} {bad} </p>
+      </div>
+    )
+  }
+
 }
 
-const MetaStat = ({all, average, positive }) =>(
-  <div>
-    <p>{"all"} {all}</p>
-    <p>{"average"} {average}</p>
-    <p>{"positive"} {positive}{"%"}</p>
-  </div>
-)
+const MetaStat = ({all, average, positive }) => {
+  if(all!==0) {
+    return(
+      <div>
+        <p>{"all"} {all}</p>
+        <p>{"average"} {average}</p>
+        <p>{"positive"} {positive}{"%"}</p>
+      </div>
+    )
+  }
+  else return(<p></p>)
+
+}
+
+
 const Statistics = (props) => (
   <div>
     <Feedback good={props.good} neutral={props.neutral} bad={props.bad}/>
