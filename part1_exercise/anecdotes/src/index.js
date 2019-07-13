@@ -1,29 +1,6 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
-
-
-const App = (props) => {
-  const [selected, setSelected] = useState(0);
-
-  const Button = (props) =>(
-    <button type="button" onClick={onclickHandler}>next anecdote</button>
-  )
-
-  const onclickHandler = () =>{
-    let jjj = Math.floor(Math.random()*anecdotes.length);
-    setSelected(jjj);
-  }
-
-
-  return (
-    <div>
-      {props.anecdotes[selected]}
-      <p><Button onClick={onclickHandler}/></p>
-    </div>
-  )
-}
-
 const anecdotes = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -32,6 +9,46 @@ const anecdotes = [
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
+
+let anecIndex = 0, //currently displayed,must be init to zero for app to work perfectly.No biggie!
+  votes = new Array(anecdotes.length).fill(0);
+
+const App = (props) => {
+  const [selected, setSelected] = useState(anecIndex);
+  const [max, setMax] = useState(anecIndex);
+
+  let Button = (props) =>(
+    <button type="button" onClick={props.handler}>{props.text}</button>
+  )
+
+  const voteHandler = () =>{
+    votes[anecIndex] += 1;
+    setMax( Math.max(...votes)); //max vote value
+    console.log(votes);
+  }
+
+  const nextHandler = () =>{
+    anecIndex = Math.floor(Math.random()*anecdotes.length);
+    setSelected(anecIndex);
+  }
+
+  return (
+    <div>
+      <h1>Anecdote of the day</h1>
+      {props.anecdotes[selected]}
+      <p><Button handler={nextHandler} text="next anecdote"/><Button handler={voteHandler} text="vote" /></p>
+
+      <div>
+      <h2>Anecdote with most votes</h2>
+      {props.anecdotes[votes.indexOf(max)]}<br/>
+      <i>has {max} votes</i>
+      </div>
+
+    </div>
+  )
+}
+
+
 
 ReactDOM.render(
   <App anecdotes={anecdotes} />,
