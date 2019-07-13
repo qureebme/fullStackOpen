@@ -7,9 +7,7 @@ import './index.css';
 let Header1 = () => (
   <h1>{"Give Feedback"}</h1>
 )
-let Header2 = () => (
-  <h2>{"statistics"}</h2>
-)
+
 let Button = ({text, onclick}) =>(
   <button onClick={onclick}>{text}</button>
 )
@@ -21,56 +19,42 @@ let Buttons = (props) => (
   </>
 )
 
-let Feedback = ({good, neutral, bad}) =>{
-  if(good===0 && neutral===0 && bad===0){
-    return(
-      <div>
-        <Header2 />
-        <p>No feedback given</p>
-      </div>
-    )
-  }
-  else{
-    return (
-      <div>
-        <Header2 />
-        <p>{"Good"} {good} </p>
-        <p>{"Neutral"} {neutral} </p>
-        <p>{"Bad"} {bad} </p>
-      </div>
-    )
-  }
 
-}
 
-const MetaStat = ({all, average, positive }) => {
-  if(all!==0) {
-    return(
-      <div>
-        <p>{"all"} {all}</p>
-        <p>{"average"} {average}</p>
-        <p>{"positive"} {positive}{"%"}</p>
-      </div>
-    )
-  }
-  else return(<p></p>)
 
-}
-const Statistic = ({text, value}) =>(
-  <p>{text} {value}</p>
+
+const Statistics2 = (props) => (
+  <table>
+
+  <thead>
+    <tr>
+        <th colSpan="2"><p>Statistics</p></th>
+    </tr>
+  </thead>
+    <tbody>
+
+      <tr>
+        <td>good</td><td>{props.good}</td>
+      </tr>
+      <tr>
+        <td>neutral</td><td>{props.neutral}</td>
+      </tr>
+      <tr>
+        <td>bad</td><td>{props.bad}</td>
+      </tr>
+      <tr>
+        <td>all</td><td>{props.all}</td>
+      </tr>
+      <tr>
+        <td>average</td><td>{props.avg}</td>
+      </tr>
+      <tr>
+        <td>positive</td><td>{props.goody + "%"}</td>
+      </tr>
+    </tbody>
+  </table>
 )
 
-const Statistics = (props) => (
-<>
-    <Statistic text={"good"} value={props.good}/>
-    <Statistic text={"neutral"} value={props.neutral}/>
-    <Statistic text={"bad"} value={props.bad}/>
-    <Statistic text={"all"} value={props.all}/>
-    <Statistic text={"average"} value={props.avg}/>
-    <Statistic text={"positive"} value={props.goody}/>
-</>
-
-)
 const App = () => {
 
   const GoodClickHandler = () => {
@@ -115,7 +99,7 @@ const App = () => {
         NeutralClickHandler={NeutralClickHandler}/>
 
       </div>
-      <Statistics good={good} neutral={neutral} bad={bad}
+      <Statistics2 good={good} neutral={neutral} bad={bad}
         all={metastats.all} avg={metastats.avg} goody={metastats.goody}/>
     </div>
   )
