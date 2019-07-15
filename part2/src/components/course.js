@@ -1,25 +1,21 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 
+//returns the items under each course part
+const Course = ({courseParts}) => courseParts.map((each)=>
+  <li key={each.id + Math.random().toString()}>{each.name} {each.exercises}</li>
+    )
 
-const Course = ({course}) =>{
-  let parts = course["parts"],
-      total = parts.reduce( (sum, each) => {
-        return sum + Number(each.exercises)
-      }, 0 )
-      //console.log("parts:", parts)
-  return (
-    <>
-      <h1>{course.name}</h1>
-      <h2>{"Contents"}</h2>
-      <p>{course.parts[0].name} {course.parts[0].exercises}</p>
-
-      <p>{course.parts[1].name} {course.parts[1].exercises}</p>
-
-      <p>{course.parts[2].name} {course.parts[2].exercises}</p>
-      <p><b>{"total of"} {total} {"exercises"}</b></p>
-      </>
-)}
+const Courses = ({courses}) =>courses.map((eachCourse)=>(
+    <div>
+      <h2 key={eachCourse.id + courses.length.toString()}>{eachCourse.name}</h2>
+      <ul>
+        <Course courseParts={eachCourse.parts}/>
+      </ul>
+      <p><b>Total of {eachCourse.parts.reduce((sum, each)=> sum+each.exercises, 0)} exercises</b></p>
+    </div>)
+    )
 
 
-export default Course
+
+export default Courses
