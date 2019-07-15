@@ -4,7 +4,9 @@ import React from 'react';
 
 const Course = ({course}) =>{
   let parts = course["parts"],
-      total = parts[0].exercises + parts[1].exercises + parts[2].exercises;
+      total = parts.reduce( (sum, each) => {
+        return sum + Number(each.exercises)
+      }, 0 )
       //console.log("parts:", parts)
   return (
     <>
