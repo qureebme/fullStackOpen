@@ -8,9 +8,15 @@ const App = () => {
 
   const onSubmitHandler = (e) =>{
     e.preventDefault();
-    let newNameList = persons.concat({name: newName})
-    setPersons(newNameList)
-    setNewName('')
+
+    let newNameList = persons.concat({name: newName});
+    let checker = newNameList.filter((currentObj) => currentObj.name.toLowerCase()===newName.toLowerCase());
+
+    if (checker.length !== 1) alert(`${newName} is already added to phonebook`);
+    else{
+      setPersons(newNameList);
+      setNewName('');
+    }
   }
 
   const onChangeHandler = (e) => setNewName(e.target.value);
