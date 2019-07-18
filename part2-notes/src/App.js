@@ -1,27 +1,7 @@
 import React, { useState } from 'react'
-
-const Filter = ({newSearch, onSearchHandler}) => (<p>filter shown with <input value={newSearch} onChange={onSearchHandler}/></p>);
-const Form = ({newName, newNumber, onSubmitHandler,onChangeHandler,onChangeHandler2}) =>(
-  <form onSubmit={onSubmitHandler}>
-    <div>
-      name: <input value={newName} onChange={onChangeHandler}/><br/><br/>
-      number: <input value={newNumber} onChange={onChangeHandler2}/>
-    </div>
-    <div>
-      <button type="submit">add</button>
-    </div>
-  </form>
-)
-const Persons = ({showAllNames, persons, newSearch, persons2, showSearchMatches}) =>(
-  <>
-    <ul>
-      {showAllNames(newSearch, persons)}
-    </ul>
-    <ul>
-      {showSearchMatches(newSearch, persons2)}
-    </ul>
-  </>
-)
+import Form from './components/form.js';
+import Filter from './components/filter.js';
+import Persons from './components/persons.js';
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -30,13 +10,13 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]);
+
   const [ newName, setNewName ] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newSearch, setNewSearch] = useState('');
   const [persons2, setPersons2] = useState(persons.concat());
 
-
-  const onSubmitHandler = (e) =>{
+  const onSubmitHandler = (e) => {
     e.preventDefault();
 
     let newNameList = persons.concat({name: newName.trim(), number: newNumber.trim()});
@@ -63,10 +43,13 @@ const App = () => {
      if(!newSearch) return personsArray.map(each => <li key={each.name}>{each.name} {each.number}</li>)
   }
 
-  const showSearchMatches = (searchString, persons2) => {
-    if (searchString){
-      let toDisplay =  persons2.filter((each)=> each.name.indexOf(searchString) !== -1);
-      return toDisplay.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+  const showSearchMatches = (newSearch, persons2) => {
+    if (newSearch){
+      let toDisplay =  persons2.filter((each)=> each.name.toLowerCase().indexOf(newSearch.toLowerCase()) !== -1);
+
+      if (toDisplay[0])
+          return toDisplay.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+      else return "No matching contact"
     }
   }
 
