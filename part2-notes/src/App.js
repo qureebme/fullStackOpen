@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Form from './components/form.js';
 import Filter from './components/filter.js';
 import Persons from './components/persons.js';
+import axios from 'axios';
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]);
+  const [ persons, setPersons] = useState([]);
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+         .then(res => setPersons(res.data))
+         .catch(err => console.log("ERROR: ", err))
+  },[])
 
   const [ newName, setNewName ] = useState('');
   const [newNumber, setNewNumber] = useState('');
@@ -37,9 +38,9 @@ const App = () => {
     setNewSearch(searchString);
   }
 
-  const showNames = (newSearch, personsArray) => {
-     if(!newSearch) return personsArray.map(each => <li key={each.name}>{each.name} {each.number}</li>);
-     return showSearchMatches(newSearch, personsArray);
+  const showNames = (newSearch, persons) => {
+     if(!newSearch) return persons.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+     return showSearchMatches(newSearch, persons);
   }
 
   const showSearchMatches = (newSearch, persons) => {
