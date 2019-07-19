@@ -14,18 +14,16 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newSearch, setNewSearch] = useState('');
-  const [persons2, setPersons2] = useState(persons.concat());
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
     let newNameList = persons.concat({name: newName.trim(), number: newNumber.trim()});
-    let checker = newNameList.filter((currentObj) => currentObj.name.toLowerCase()===newName.toLowerCase());
+    let checker = newNameList.filter((currentObj) => currentObj.name.toLowerCase()===newName.trim().toLowerCase());
 
     if (checker.length !== 1) alert(`${newName} is already added to phonebook`);
     else{
       setPersons(newNameList);
-      setPersons2(newNameList);
       setNewName('');
       setNewNumber('');
     }
@@ -39,13 +37,14 @@ const App = () => {
     setNewSearch(searchString);
   }
 
-  const showAllNames = (newSearch, personsArray) => {
-     if(!newSearch) return personsArray.map(each => <li key={each.name}>{each.name} {each.number}</li>)
+  const showNames = (newSearch, personsArray) => {
+     if(!newSearch) return personsArray.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+     return showSearchMatches(newSearch, personsArray);
   }
 
-  const showSearchMatches = (newSearch, persons2) => {
+  const showSearchMatches = (newSearch, persons) => {
     if (newSearch){
-      let toDisplay =  persons2.filter((each)=> each.name.toLowerCase().indexOf(newSearch.toLowerCase()) !== -1);
+      let toDisplay =  persons.filter((each)=> each.name.toLowerCase().indexOf(newSearch.toLowerCase()) !== -1);
 
       if (toDisplay[0])
           return toDisplay.map(each => <li key={each.name}>{each.name} {each.number}</li>);
@@ -61,8 +60,8 @@ const App = () => {
       <Form newName={newName} newNumber={newNumber} onChangeHandler={onChangeHandler}
           onChangeHandler2={onChangeHandler2} onSubmitHandler={onSubmitHandler}/>
       <h3>Numbers</h3>
-      <Persons persons={persons} showAllNames={showAllNames} showSearchMatches={showSearchMatches}
-          newSearch={newSearch} persons2={persons2}/>
+      <Persons persons={persons} showNames={showNames} showSearchMatches={showSearchMatches}
+          newSearch={newSearch}/>
     </div>
   )
 }

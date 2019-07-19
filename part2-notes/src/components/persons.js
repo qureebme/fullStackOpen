@@ -1,13 +1,11 @@
 import React from 'react';
 
-const Persons = ({showAllNames, persons, newSearch, persons2, showSearchMatches}) =>(
+const Persons = ({showNames, persons, newSearch}) =>(
   <>
     <ul>
-      {showAllNames(newSearch, persons)}
+      {showNames(newSearch, persons)}
     </ul>
-    <ul>
-      {showSearchMatches(newSearch, persons2)}
-    </ul>
+
   </>
 )
 
