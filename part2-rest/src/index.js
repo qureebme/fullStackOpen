@@ -6,24 +6,25 @@ const App = ()=>{
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchresult] = useState([]);
-  let matches = [];
 
   const showMatchingCountries = (searchQuery, searchResult) => {
-    matches = searchResult.filter((each) => each.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1);
-    //setMatches(matches);
+    let matches = searchResult.filter((each) => each.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1);
 
     if (searchQuery){
-      if (matches.length === 1) return
-      else if (matches.length > 0 && matches.length < 11) return matches.map((each) => <li key={each.name}>{each.name}</li>);
+      if (matches.length === 1) return showOneCountry(matches)
+      else if (matches.length > 0 && matches.length < 11) return matches.map((each) => {
+        return <div key={each.name}>{each.name} <button onClick={onClickHandler(each.name)}>show</button></div>
+      });
       else if (matches.length === 0){return "No matching country"}
       else return "Too many matches, specify another filter"
     }
   }
+  const onClickHandler = (name) => () => setSearchQuery(name)
 
-  const showOneCountry = (matches) => {
-    if (matches.length === 1){
-      let item = matches[0];
-      //console.log(item)
+  const showOneCountry = (match) => {
+    if (match.length === 1){
+      let item = match[0];
+
       return (
         <>
           <h2>{item.name}</h2>
@@ -37,7 +38,6 @@ const App = ()=>{
           <div>
             <img src={item.flag} width="100" alt="country flag"/>
           </div>
-
         </>
       )
     }
@@ -45,6 +45,7 @@ const App = ()=>{
   const onChangeHandler = (e) => {
     setSearchQuery(e.target.value);
   }
+
   useEffect(() => {
     axios.get('https://restcountries.eu/rest/v2/all')
           .then((res) => {
@@ -62,9 +63,6 @@ const App = ()=>{
         <ul>
           {showMatchingCountries(searchQuery, searchResult)}
         </ul>
-      </div>
-      <div>
-        {showOneCountry(matches)}
       </div>
     </div>
   )
