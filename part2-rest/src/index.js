@@ -6,23 +6,45 @@ const App = ()=>{
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchresult] = useState([]);
+  const [capital, setCapital] = useState({});
+  const [temp, setTemp] = useState('');
+  const [wind, setWind] = useState('');
+  const [wind_dir, setDir] = useState('');
+  const [cond, setCond] = useState('');
+  let matches;
 
   const showMatchingCountries = (searchQuery, searchResult) => {
-    let matches = searchResult.filter((each) => each.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1);
+    matches = searchResult.filter((each) => each.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1);
 
     if (searchQuery){
-      if (matches.length === 1) return showOneCountry(matches)
+      if (matches.length === 1) return showOneCountry(matches);
+
       else if (matches.length > 0 && matches.length < 11) return matches.map((each) => {
-        return <div key={each.name}>{each.name} <button onClick={onClickHandler(each.name)}>show</button></div>
+        return <div key={each.name}>{each.name} <button onClick={onClickHandler(each)}>show</button></div>
       });
       else if (matches.length === 0){return "No matching country"}
       else return "Too many matches, specify another filter"
     }
   }
-  const onClickHandler = (name) => () => setSearchQuery(name)
+
+  const onClickHandler = (each) => () => {
+    setSearchQuery(each.name);
+    setCapital(each);
+  }
+
+  const showWeather = (capital) => {
+    if(capital.capital){
+      return (
+        <>
+          <h3> Weather in {capital.capital}</h3>
+          <p><b>temperature:</b> {temp} Celcius</p>
+          <img src={cond} alt="what it looks like"/>
+          <p><b>wind:</b> {wind} kph direction {wind_dir}</p>
+        </>)
+    }
+  }
 
   const showOneCountry = (match) => {
-    if (match.length === 1){
       let item = match[0];
 
       return (
@@ -36,15 +58,28 @@ const App = ()=>{
             <p>{item.languages.map((each) => <li key={each.name}>{each.name}</li>)}</p>
           </ul>
           <div>
-            <img src={item.flag} width="100" alt="country flag"/>
+            <img src={item.flag} width="100" alt={`flag of {item.name}`}/>
           </div>
         </>
       )
-    }
   }
   const onChangeHandler = (e) => {
-    setSearchQuery(e.target.value);
+    if (matches.length > 1) setCapital('');
+    return setSearchQuery(e.target.value);
   }
+
+  useEffect(() => {
+    if (capital.capital){
+      let url = 'http://api.apixu.com/v1/current.json?key=72e7a19676014341a81191030192007&q=' + capital.capital;
+      axios.get(url)
+            .then((res) =>{
+
+              setTemp(res.data.current.temp_c); setWind(res.data.current.wind_kph);
+              setDir(res.data.current.wind_dir); setCond(res.data.current.condition.icon);
+            })
+            .catch((err) => console.error("errrrr: ", err));
+    }
+  },[capital]);
 
   useEffect(() => {
     axios.get('https://restcountries.eu/rest/v2/all')
@@ -53,17 +88,22 @@ const App = ()=>{
           })
           .catch((err) => console.error("errrrr: ", err));
   },[]);
+
   return(
     <div>
       <div>
         <p>Find countries <input onChange={onChangeHandler} value={searchQuery}/></p>
       </div>
 
-      <div>
-        <ul>
-          {showMatchingCountries(searchQuery, searchResult)}
-        </ul>
-      </div>
+        <div>
+          <ul>
+            {showMatchingCountries(searchQuery, searchResult)}
+          </ul>
+        </div>
+
+        <div>
+          {showWeather(capital)}
+        </div>
     </div>
   )
 }
