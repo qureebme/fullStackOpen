@@ -6,7 +6,7 @@ const App = ()=>{
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchresult] = useState([]);
-  const [capital, setCapital] = useState({});
+  const [country, setCountry] = useState({});
   const [temp, setTemp] = useState('');
   const [wind, setWind] = useState('');
   const [wind_dir, setDir] = useState('');
@@ -29,18 +29,18 @@ const App = ()=>{
 
   const onClickHandler = (each) => () => {
     setSearchQuery(each.name);
-    setCapital(each);
+    setCountry(each);
   }
 
-  const showWeather = (capital) => {
-    if(capital.capital){
+  const showWeather = (item) => {
+    if(item.capital){
       return (
-        <>
-          <h3> Weather in {capital.capital}</h3>
+        <div>
+          <h3> Weather in {item.capital}</h3>
           <p><b>temperature:</b> {temp} Celcius</p>
           <img src={cond} alt="what it looks like"/>
           <p><b>wind:</b> {wind} kph direction {wind_dir}</p>
-        </>)
+        </div>)
     }
   }
 
@@ -48,7 +48,7 @@ const App = ()=>{
       let item = match[0];
 
       return (
-        <>
+        <div>
           <h2>{item.name}</h2>
           <p>Capital {item.capital}</p>
           <p>population {item.population}</p>
@@ -60,17 +60,21 @@ const App = ()=>{
           <div>
             <img src={item.flag} width="100" alt={`flag of {item.name}`}/>
           </div>
-        </>
+        </div>
       )
   }
   const onChangeHandler = (e) => {
-    if (matches.length > 1) setCapital('');
+    if (matches.length === 1) {
+      let ctry = matches[0]
+      setCountry(ctry);
+    }
+    else setCountry({});
     return setSearchQuery(e.target.value);
   }
 
   useEffect(() => {
-    if (capital.capital){
-      let url = 'http://api.apixu.com/v1/current.json?key=72e7a19676014341a81191030192007&q=' + capital.capital;
+    if (country.capital){
+      let url = 'http://api.apixu.com/v1/current.json?key=72e7a19676014341a81191030192007&q=' + country.capital;
       axios.get(url)
             .then((res) =>{
 
@@ -79,7 +83,7 @@ const App = ()=>{
             })
             .catch((err) => console.error("errrrr: ", err));
     }
-  },[capital]);
+  },[country]);
 
   useEffect(() => {
     axios.get('https://restcountries.eu/rest/v2/all')
@@ -102,7 +106,7 @@ const App = ()=>{
         </div>
 
         <div>
-          {showWeather(capital)}
+          {showWeather(country)}
         </div>
     </div>
   )
