@@ -18,15 +18,23 @@ const App = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-
-    let newNameList = persons.concat({name: newName.trim(), number: newNumber.trim()});
-    let checker = newNameList.filter((currentObj) => currentObj.name.toLowerCase()===newName.trim().toLowerCase());
-
-    if (checker.length !== 1) alert(`${newName} is already added to phonebook`);
+    let newPerson  = {name: newName.trim(), number: newNumber.trim()};
+    //let newNameList = persons.concat(newPerson);
+    
+    let checker = persons.filter((currentObj) => currentObj.name.toLowerCase()===newPerson.name.toLowerCase());
+    if (checker.length !== 0) {
+      alert(`${newName} is already added to phonebook`);
+      //return;
+    }
     else{
-      setPersons(newNameList);
-      setNewName('');
-      setNewNumber('');
+
+      axios.post('http://localhost:3001/persons', newPerson)
+      .then(res => {
+        setPersons(persons.concat(res.data));
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch(err => console.log('something really bad happened', err));
     }
   }
 
