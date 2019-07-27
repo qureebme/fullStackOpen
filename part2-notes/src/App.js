@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Form from './components/form.js';
 import Filter from './components/filter.js';
 import Persons from './components/persons.js';
-import axios from 'axios';
+import utils from './server'
 
 const App = () => {
   const [ persons, setPersons] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
+    utils.loadStartData()
          .then(res => setPersons(res.data))
          .catch(err => console.log("ERROR: ", err))
   },[])
@@ -28,7 +28,7 @@ const App = () => {
     }
     else{
 
-      axios.post('http://localhost:3001/persons', newPerson)
+      utils.addPerson(newPerson)
       .then(res => {
         setPersons(persons.concat(res.data));
         setNewName('');
@@ -47,8 +47,16 @@ const App = () => {
   }
 
   const showNames = (newSearch, persons) => {
-     if(!newSearch) return persons.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+     if(!newSearch) return persons.map(each => <li key={each.name}>{each.name} {each.number} <button onClick={onClickHandler(each)}>delete</button></li>);
      return showSearchMatches(newSearch, persons);
+  }
+
+  const onClickHandler = (eachPerson) => () => {
+    if (window.confirm(`Delete ${eachPerson.name}?`)){
+      utils.deleteContact(eachPerson)
+          .then(res => setPersons(persons.filter(each => each.id !== eachPerson.id)))
+          .catch(err => console.log("Something bad happened:", err))
+    }
   }
 
   const showSearchMatches = (newSearch, persons) => {
@@ -56,7 +64,7 @@ const App = () => {
       let toDisplay =  persons.filter((each)=> each.name.toLowerCase().indexOf(newSearch.toLowerCase()) !== -1);
 
       if (toDisplay[0])
-          return toDisplay.map(each => <li key={each.name}>{each.name} {each.number}</li>);
+          return toDisplay.map(each => <li key={each.name}>{each.name} {each.number} <button onClick={onClickHandler(each)}>delete</button></li>);
       else return "No matching contact"
     }
   }
