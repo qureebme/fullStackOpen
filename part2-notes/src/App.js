@@ -2,19 +2,23 @@ import React, { useState, useEffect } from 'react'
 import Form from './components/form.js';
 import Filter from './components/filter.js';
 import Persons from './components/persons.js';
+import Notif from './components/notif'
 import utils from './server'
 
 const App = () => {
   const [ persons, setPersons] = useState([]);
+  
+
+  const [ newName, setNewName ] = useState('');
+  const [newNumber, setNewNumber] = useState('');
+  const [newSearch, setNewSearch] = useState('');
+  const [notif, setNotif] = useState(null);
+
   useEffect(() => {
     utils.loadStartData()
          .then(res => setPersons(res.data))
          .catch(err => console.log("ERROR: ", err))
   },[])
-
-  const [ newName, setNewName ] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [newSearch, setNewSearch] = useState('');
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -33,6 +37,8 @@ const App = () => {
                     setPersons(persons.map(each => each.id === data.id ? data : each));
                     setNewName('');
                     setNewNumber('');
+                    setNotif(`Modified ${modifiedperson.name}`);
+                    setTimeout(()=>setNotif(null),3000);
                   })
               }
     }
@@ -43,6 +49,8 @@ const App = () => {
         setPersons(persons.concat(res.data));
         setNewName('');
         setNewNumber('');
+        setNotif(`Added ${newPerson.name}`);
+        setTimeout(()=>setNotif(null), 3000);
       })
       .catch(err => console.log('something really bad happened', err));
     }
@@ -64,7 +72,11 @@ const App = () => {
   const onClickHandler = (eachPerson) => () => {
     if (window.confirm(`Delete ${eachPerson.name}?`)){
       utils.deleteContact(eachPerson)
-          .then(res => setPersons(persons.filter(each => each.id !== eachPerson.id)))
+          .then(res => {
+            setPersons(persons.filter(each => each.id !== eachPerson.id));
+            setNotif(`Deleted ${eachPerson.name}`);
+                    setTimeout(()=>setNotif(null),3000);
+          })
           .catch(err => console.log("Something bad happened:", err))
     }
   }
@@ -82,6 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notif notifMessage={notif ? notif:null}/>
       <Filter newSearch={newSearch} onSearchHandler={onSearchHandler} />
       <h3>Add a new contact</h3>
       <Form newName={newName} newNumber={newNumber} onChangeHandler={onChangeHandler}
