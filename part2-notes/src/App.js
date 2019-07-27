@@ -19,12 +19,22 @@ const App = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     let newPerson  = {name: newName.trim(), number: newNumber.trim()};
-    //let newNameList = persons.concat(newPerson);
     
     let checker = persons.filter((currentObj) => currentObj.name.toLowerCase()===newPerson.name.toLowerCase());
     if (checker.length !== 0) {
-      alert(`${newName} is already added to phonebook`);
-      //return;
+      if (!window.confirm(`${checker[0].name} is already added to phonebook, replace old number with the new one?`)) return
+      else {
+        let modifiedperson = {
+          ...newPerson,
+          id: checker[0].id
+      }
+            utils.replaceNumber(modifiedperson)
+                  .then(data => {
+                    setPersons(persons.map(each => each.id === data.id ? data : each));
+                    setNewName('');
+                    setNewNumber('');
+                  })
+              }
     }
     else{
 

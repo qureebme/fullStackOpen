@@ -17,4 +17,10 @@ const deleteContact = (person) => {
     return req
 }
 
-export default {loadStartData, addPerson, deleteContact}
+const replaceNumber = (modifiedPerson) => {
+    
+    let req = axios.put(dataURI + modifiedPerson.id, modifiedPerson)
+    return req.then(res => res.data)
+}
+
+export default {loadStartData, addPerson, deleteContact, replaceNumber}
