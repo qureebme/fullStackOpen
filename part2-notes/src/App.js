@@ -3,6 +3,7 @@ import Form from './components/form.js';
 import Filter from './components/filter.js';
 import Persons from './components/persons.js';
 import Notif from './components/notif'
+import Error from './components/error'
 import utils from './server'
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [newSearch, setNewSearch] = useState('');
   const [notif, setNotif] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     utils.loadStartData()
@@ -39,6 +41,10 @@ const App = () => {
                     setNewNumber('');
                     setNotif(`Modified ${modifiedperson.name}`);
                     setTimeout(()=>setNotif(null),3000);
+                  })
+                  .catch((err) => {
+                    setError(`${modifiedperson.name} no longer exists on the server`);
+                    setTimeout(() => setError(null),3000);
                   })
               }
     }
@@ -77,7 +83,10 @@ const App = () => {
             setNotif(`Deleted ${eachPerson.name}`);
                     setTimeout(()=>setNotif(null),3000);
           })
-          .catch(err => console.log("Something bad happened:", err))
+          .catch(err => {
+            setError(`${eachPerson.name} no longer exists on the server`);
+                    setTimeout(() => setError(null),3000);
+          })
     }
   }
 
@@ -95,6 +104,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notif notifMessage={notif ? notif:null}/>
+      <Error errorMessage={error ? error:null}/>
       <Filter newSearch={newSearch} onSearchHandler={onSearchHandler} />
       <h3>Add a new contact</h3>
       <Form newName={newName} newNumber={newNumber} onChangeHandler={onChangeHandler}
